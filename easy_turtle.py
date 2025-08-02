@@ -92,8 +92,7 @@ if SYSTEM == "Windows":
 
     os.chdir(os.path.dirname(sys.argv[0]))
 
-    ICON_FILE = os.path.abspath("./Files/win_icon.gif")
-    README_FILE = os.path.abspath("./Files/index.html")
+    ICON_FILE = os.path.abspath("./win_icon.gif")
 
     if sys.argv[0] == sys.executable:
         EXECUTABLE = True
@@ -104,8 +103,7 @@ if SYSTEM == "Windows":
         CONFIG_FILE = os.path.abspath("./config.json")
         BOOT_FOLDER = os.path.abspath("./boot/")
     else:
-        CONFIG_FILE = os.path.join(
-            os.environ["ALLUSERSPROFILE"], "EasyTurtle/config.json")
+        CONFIG_FILE = os.path.join(os.environ["ALLUSERSPROFILE"], "EasyTurtle/config.json")
         BOOT_FOLDER = os.path.join(os.environ["ALLUSERSPROFILE"], "EasyTurtle/boot/")
     os.makedirs(BOOT_FOLDER, exist_ok=True)
 
@@ -184,8 +182,7 @@ elif SYSTEM == "Linux":
 
     os.chdir(os.getcwd())
 
-    ICON_FILE = os.path.abspath("./Files/win_icon.gif")
-    README_FILE = os.path.abspath("./Files/index.html")
+    ICON_FILE = os.path.abspath("./win_icon.gif")
 
     if sys.argv[0] == sys.executable:
         EXECUTABLE = True
@@ -244,7 +241,8 @@ elif SYSTEM == "Linux":
             "警告",
             '\
 "x11-xserver-utils"がインストールされていません\n\
-画面の大きさの調整は無効になります')
+画面の大きさの調整は無効になります',
+        )
         WIN_MAG = 1
 
     MIN_WIDTH = EXPAND(1240)
@@ -345,8 +343,7 @@ class EasyTurtle:
         et_version = ".".join([str(v) for v in __version__])
         os_version = platform.system() + str(platform.release())
         tcl_version = tk.Tcl().eval("info patchlevel")
-        lab2 = tk.Label(
-            self.win, font=FONT, text=f"EasyTurtleバージョン\t：{et_version}")
+        lab2 = tk.Label(self.win, font=FONT, text=f"EasyTurtleバージョン\t：{et_version}")
         lab2.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
         lab3 = tk.Label(self.win, font=FONT, text=f"Pythonバージョン\t\t：{py_version}")
         lab3.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
@@ -355,8 +352,7 @@ class EasyTurtle:
         lab5 = tk.Label(self.win, font=FONT, text=f"Tclバージョン\t\t：{tcl_version}")
         lab5.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
         font = (FONT_TYPE1, EXPAND(12), "bold", "underline")
-        lab6 = tk.Label(
-            self.win, font=font, fg="blue", cursor="hand2", text="アップデートの確認")
+        lab6 = tk.Label(self.win, font=font, fg="blue", cursor="hand2", text="アップデートの確認")
         lab6.bind("<Button-1>", self.check_update)
         lab6.pack(side=tk.RIGHT, anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
         self.win.resizable(False, False)
@@ -468,14 +464,12 @@ class EasyTurtle:
         if file is None:
             if self.last_directory is not None:
                 file = filedialog.askopenfilename(
-                    parent=ROOT,
-                    initialdir=self.last_directory,
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=self.last_directory, filetypes=[("Jsonファイル", "*.json")]
+                )
             else:
                 file = filedialog.askopenfilename(
-                    parent=ROOT,
-                    initialdir=self.get_document_path(),
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=self.get_document_path(), filetypes=[("Jsonファイル", "*.json")]
+                )
 
         # ファイルが選択されていなければ終了
         if file == "":
@@ -560,13 +554,13 @@ class EasyTurtle:
                     "確認",
                     "\
 選択されたファイルは古いバージョンです\n\
-このバージョン用に保存し直しますか？")
+このバージョン用に保存し直しますか？",
+                )
                 if res:
                     newtab.save_file(file)
 
             # 基本データを設定
-            newtab.default_data = data.get(
-                "default", [d.get_data(more=False) for d in newtab.widgets])
+            newtab.default_data = data.get("default", [d.get_data(more=False) for d in newtab.widgets])
 
             # 最後にチェックされたウィジェット
             newtab.last_checked = data.get("last", -1)
@@ -616,13 +610,7 @@ class EasyTurtle:
         """詳しい情報の表示"""
         if self.running_program:
             return
-        webbrowser.open_new("https://latte72r.github.io/EasyTurtle/")
-
-    def show_offline_document(self, event=None):
-        """詳しい情報の表示"""
-        if self.running_program:
-            return
-        webbrowser.open_new(README_FILE)
+        webbrowser.open_new("https://easyturtle.latte72.net/")
 
     def show_release_page(self, event=None):
         """リリースページの表示"""
@@ -661,18 +649,21 @@ class EasyTurtle:
                     "エラー",
                     "\
 エラーが発生しました\n\
-ネットワーク接続を確認してください")
+ネットワーク接続を確認してください",
+                )
             elif new_version == "OtherError":
                 messagebox.showerror(
                     "\
 エラーが発生しました\n\
-しばらくしてからもう一度お試しください")
+しばらくしてからもう一度お試しください"
+                )
             elif new_version <= __version__:
                 messagebox.showinfo(
                     "アップデート",
                     f"\
 バージョン：{old_joined_version}\n\
-お使いのバージョンは最新です")
+お使いのバージョンは最新です",
+                )
             elif sys.argv[0][-14:] == "EasyTurtle.exe":
                 self.ask_update_msi(new_version)
             else:
@@ -681,7 +672,8 @@ class EasyTurtle:
             messagebox.showerror(
                 "エラー",
                 "\
-正規リリースでないため確認できません")
+正規リリースでないため確認できません",
+            )
 
     def ask_update_msi(self, new_version, start=False):
         """自動アップデートするか尋ねる"""
@@ -697,19 +689,12 @@ class EasyTurtle:
         self.win2.grab_set()
         lab1 = tk.Label(self.win2, font=FONT, text="新しいバージョンが見つかりました")
         lab1.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
-        lab2 = tk.Label(
-            self.win2, font=FONT, text=f"お使いのバージョン：{old_joined_version}")
+        lab2 = tk.Label(self.win2, font=FONT, text=f"お使いのバージョン：{old_joined_version}")
         lab2.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
-        lab3 = tk.Label(
-            self.win2, font=FONT, text=f"最新のバージョン　：{new_joined_version}")
+        lab3 = tk.Label(self.win2, font=FONT, text=f"最新のバージョン　：{new_joined_version}")
         lab3.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
         font = (FONT_TYPE1, EXPAND(12), "bold", "underline")
-        lab5 = tk.Label(
-            self.win2,
-            font=font,
-            fg="blue",
-            cursor="hand2",
-            text="今すぐアップデートする")
+        lab5 = tk.Label(self.win2, font=font, fg="blue", cursor="hand2", text="今すぐアップデートする")
         lab5.bind("<Button-1>", lambda e: self.auto_update_msi(new_version))
         lab5.pack(anchor=tk.N, pady=(0, EXPAND(10)))
         self.win2.resizable(False, False)
@@ -721,17 +706,15 @@ class EasyTurtle:
         url = f"\
 https://github.com/latte72r/EasyTurtle/releases/\
 download/v{joined_version}/EasyTurtle-{joined_version}-amd64.msi"
-        file_name = os.path.join(
-            os.environ["USERPROFILE"],
-            "downloads",
-            f"EasyTurtle-{joined_version}-amd64.msi")
+        file_name = os.path.join(os.environ["USERPROFILE"], "downloads", f"EasyTurtle-{joined_version}-amd64.msi")
         try:
             request.urlretrieve(url, file_name)
         except AttributeError:
             messagebox.showerror(
                 "\
 エラーが発生しました\n\
-しばらくしてからもう一度お試しください")
+しばらくしてからもう一度お試しください"
+            )
             traceback.print_exc()
 
         subprocess.Popen(["cmd", "/c", file_name])
@@ -752,15 +735,12 @@ download/v{joined_version}/EasyTurtle-{joined_version}-amd64.msi"
         self.win2.grab_set()
         lab1 = tk.Label(self.win2, font=FONT, text="新しいバージョンが見つかりました")
         lab1.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
-        lab2 = tk.Label(
-            self.win2, font=FONT, text=f"お使いのバージョン：{old_joined_version}")
+        lab2 = tk.Label(self.win2, font=FONT, text=f"お使いのバージョン：{old_joined_version}")
         lab2.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
-        lab3 = tk.Label(
-            self.win2, font=FONT, text=f"最新のバージョン　：{new_joined_version}")
+        lab3 = tk.Label(self.win2, font=FONT, text=f"最新のバージョン　：{new_joined_version}")
         lab3.pack(anchor=tk.NW, padx=EXPAND(20), pady=(0, EXPAND(10)))
         font = (FONT_TYPE1, EXPAND(12), "bold", "underline")
-        lab5 = tk.Label(
-            self.win2, font=font, fg="blue", cursor="hand2", text="今すぐ確認する")
+        lab5 = tk.Label(self.win2, font=font, fg="blue", cursor="hand2", text="今すぐ確認する")
         lab5.bind("<Button-1>", self.show_release_page)
         lab5.pack(anchor=tk.N, pady=(0, EXPAND(10)))
         self.win2.resizable(False, False)
@@ -1000,7 +980,7 @@ download/v{joined_version}/EasyTurtle-{joined_version}-amd64.msi"
         ROOT.bind("<Control-Key-w>", self.close_tab)
         ROOT.bind("<Control-Key-z>", self.undo_change)
         ROOT.bind("<Control-Key-comma>", self.edit_config)
-        ROOT.bind("<Key-F1>", self.show_offline_document)
+        ROOT.bind("<Key-F1>", self.show_online_document)
         ROOT.bind("<Key-F5>", self.run_standard_mode)
         ROOT.bind("<Shift-Key-F5>", self.run_fastest_mode)
 
@@ -1015,89 +995,52 @@ download/v{joined_version}/EasyTurtle-{joined_version}-amd64.msi"
 
         # FILEメニューの作成
         filemenu = tk.Menu(self.menubar, tearoff=0, font=menu_font)
-        filemenu.add_command(
-            label="新しいタブ", accelerator="Ctrl+N", command=self.new_program)
-        filemenu.add_command(
-            label="新しいウィンドウ",
-            accelerator="Ctrl+Shift+N",
-            command=self.new_window)
+        filemenu.add_command(label="新しいタブ", accelerator="Ctrl+N", command=self.new_program)
+        filemenu.add_command(label="新しいウィンドウ", accelerator="Ctrl+Shift+N", command=self.new_window)
         filemenu.add_separator()
-        filemenu.add_command(
-            label="ファイルを開く", accelerator="Ctrl+O", command=self.open_file)
-        filemenu.add_command(
-            label="最近使用した項目",
-            accelerator="Ctrl+H",
-            command=self.show_recent_files)
+        filemenu.add_command(label="ファイルを開く", accelerator="Ctrl+O", command=self.open_file)
+        filemenu.add_command(label="最近使用した項目", accelerator="Ctrl+H", command=self.show_recent_files)
         filemenu.add_separator()
-        filemenu.add_command(
-            label="上書き保存", accelerator="Ctrl+S", command=self.save_program)
-        filemenu.add_command(
-            label="名前を付けて保存",
-            accelerator="Ctrl+Shift+S",
-            command=self.save_program_as)
+        filemenu.add_command(label="上書き保存", accelerator="Ctrl+S", command=self.save_program)
+        filemenu.add_command(label="名前を付けて保存", accelerator="Ctrl+Shift+S", command=self.save_program_as)
         filemenu.add_separator()
-        filemenu.add_command(
-            label="現在のタブを閉じる", accelerator="Ctrl+W", command=self.close_tab)
-        filemenu.add_command(
-            label="保存済みのタブを閉じる",
-            accelerator="Ctrl+T",
-            command=self.close_saved_tab)
+        filemenu.add_command(label="現在のタブを閉じる", accelerator="Ctrl+W", command=self.close_tab)
+        filemenu.add_command(label="保存済みのタブを閉じる", accelerator="Ctrl+T", command=self.close_saved_tab)
         filemenu.add_separator()
-        filemenu.add_command(
-            label="再起動", accelerator="Ctrl+R", command=self.reboot_program)
-        filemenu.add_command(
-            label="終了", accelerator="Ctrl+Q", command=self.close_window)
+        filemenu.add_command(label="再起動", accelerator="Ctrl+R", command=self.reboot_program)
+        filemenu.add_command(label="終了", accelerator="Ctrl+Q", command=self.close_window)
         self.menubar.add_cascade(label="ファイル", menu=filemenu)
 
         # EDITメニューの作成
         editmenu = tk.Menu(self.menubar, tearoff=0, font=menu_font)
-        editmenu.add_command(
-            label="取り消し", accelerator="Ctrl+Z", command=self.undo_change)
-        editmenu.add_command(
-            label="やり直し", accelerator="Ctrl+Shift+Z", command=self.redo_change)
+        editmenu.add_command(label="取り消し", accelerator="Ctrl+Z", command=self.undo_change)
+        editmenu.add_command(label="やり直し", accelerator="Ctrl+Shift+Z", command=self.redo_change)
         editmenu.add_separator()
-        editmenu.add_command(
-            label="コピー", accelerator="Ctrl+Shift+C", command=self.copy_selected)
-        editmenu.add_command(
-            label="切り取り", accelerator="Ctrl+Shift+X", command=self.cut_selected)
-        editmenu.add_command(
-            label="貼り付け", accelerator="Ctrl+Shift+V", command=self.paste_widgets)
-        editmenu.add_command(
-            label="削除", accelerator="Ctrl+D", command=self.delete_selected)
+        editmenu.add_command(label="コピー", accelerator="Ctrl+Shift+C", command=self.copy_selected)
+        editmenu.add_command(label="切り取り", accelerator="Ctrl+Shift+X", command=self.cut_selected)
+        editmenu.add_command(label="貼り付け", accelerator="Ctrl+Shift+V", command=self.paste_widgets)
+        editmenu.add_command(label="削除", accelerator="Ctrl+D", command=self.delete_selected)
         editmenu.add_separator()
-        editmenu.add_command(
-            label="有効化", accelerator="Ctrl+Shift+E", command=self.enable_selected)
-        editmenu.add_command(
-            label="無効化", accelerator="Ctrl+Shift+D", command=self.disable_selected)
+        editmenu.add_command(label="有効化", accelerator="Ctrl+Shift+E", command=self.enable_selected)
+        editmenu.add_command(label="無効化", accelerator="Ctrl+Shift+D", command=self.disable_selected)
         editmenu.add_separator()
-        editmenu.add_command(
-            label="すべて選択", accelerator="Ctrl+Shift+A", command=self.select_all)
-        editmenu.add_command(
-            label="選択解除", accelerator="Ctrl+L", command=self.clear_selected)
+        editmenu.add_command(label="すべて選択", accelerator="Ctrl+Shift+A", command=self.select_all)
+        editmenu.add_command(label="選択解除", accelerator="Ctrl+L", command=self.clear_selected)
         editmenu.add_separator()
-        editmenu.add_command(
-            label="行へ移動", accelerator="Ctrl+G", command=self.goto_line)
+        editmenu.add_command(label="行へ移動", accelerator="Ctrl+G", command=self.goto_line)
         self.menubar.add_cascade(label="編集", menu=editmenu)
 
         # RUNメニューの作成
         runmenu = tk.Menu(self.menubar, tearoff=0, font=menu_font)
-        runmenu.add_command(
-            label="実行", accelerator="F5", command=self.run_standard_mode)
-        runmenu.add_command(
-            label="最速実行", accelerator="Shift+F5", command=self.run_fastest_mode)
+        runmenu.add_command(label="実行", accelerator="F5", command=self.run_standard_mode)
+        runmenu.add_command(label="最速実行", accelerator="Shift+F5", command=self.run_fastest_mode)
         self.menubar.add_cascade(label="実行", menu=runmenu)
 
         # OPTIONSメニューの追加
         othermenu = tk.Menu(self.menubar, tearoff=0, font=menu_font)
-        othermenu.add_command(
-            label="設定", accelerator="Ctrl+,", command=self.edit_config)
+        othermenu.add_command(label="設定", accelerator="Ctrl+,", command=self.edit_config)
         othermenu.add_separator()
-        othermenu.add_command(
-            label="オンラインヘルプ", command=self.show_online_document)
-        othermenu.add_command(
-            label="オフラインヘルプ",
-            accelerator="F1",
-            command=self.show_offline_document)
+        othermenu.add_command(label="オンラインヘルプ", accelerator="F1", command=self.show_online_document)
         othermenu.add_command(label="バージョン情報", command=self.version_info)
         othermenu.add_command(label="GitHubの表示", command=self.show_github_page)
         self.menubar.add_cascade(label="オプション", menu=othermenu)
@@ -1127,7 +1070,8 @@ download/v{joined_version}/EasyTurtle-{joined_version}-amd64.msi"
             (7, 9),
             (4, 7),
             (1, 10),
-            (2, 14))
+            (2, 14),
+        )
 
         # 背景のキャンバス
         cv = tk.Canvas(ROOT, width=MIN_WIDTH, height=MIN_HEIGHT)
@@ -1137,26 +1081,19 @@ download/v{joined_version}/EasyTurtle-{joined_version}-amd64.msi"
             MIN_HEIGHT // 2 - EXPAND(40),
             text="EasyTurtle",
             fill="green",
-            font=(FONT_TYPE2, EXPAND(80), "bold", "italic"))
+            font=(FONT_TYPE2, EXPAND(80), "bold", "italic"),
+        )
         cv.create_polygon(
-            *self.get_shape(
-                shape,
-                MIN_WIDTH // 2 + EXPAND(260),
-                MIN_HEIGHT // 2 - EXPAND(50),
-                EXPAND(-4)),
-            fill="green")
+            *self.get_shape(shape, MIN_WIDTH // 2 + EXPAND(260), MIN_HEIGHT // 2 - EXPAND(50), EXPAND(-4)), fill="green"
+        )
 
         # 背景の右下
         frame = tk.Frame(ROOT)
         frame.place(x=MIN_WIDTH - EXPAND(340), y=MIN_HEIGHT - EXPAND(50))
-        lab1 = tk.Label(
-            frame,
-            text="©2020-2024 Latte72.",
-            font=(FONT_TYPE2, EXPAND(12), "italic"))
+        lab1 = tk.Label(frame, text="©2020-2024 Latte72.", font=(FONT_TYPE2, EXPAND(12), "italic"))
         lab1.pack(side=tk.RIGHT, padx=EXPAND(20))
         joined_version = ".".join([str(n) for n in __version__])
-        lab2 = tk.Label(
-            frame, text="v" + joined_version, font=(FONT_TYPE1, EXPAND(12), "bold"))
+        lab2 = tk.Label(frame, text="v" + joined_version, font=(FONT_TYPE1, EXPAND(12), "bold"))
         lab2.pack(side=tk.RIGHT, padx=EXPAND(10))
 
 
@@ -1336,12 +1273,15 @@ class ConfigureTab:
                     tab.canceled_changes = []
                     tab.back_up()
 
-        if (CONFIG["expand_window"] != last_config["expand_window"]) or (CONFIG["scroll_center"] != last_config["scroll_center"]):
+        if (CONFIG["expand_window"] != last_config["expand_window"]) or (
+            CONFIG["scroll_center"] != last_config["scroll_center"]
+        ):
             res = messagebox.askyesno(
                 "確認",
                 "\
 変更された設定には再起動後に反映されるものが含まれています\n\
-今すぐこのアプリを再起動しますか？")
+今すぐこのアプリを再起動しますか？",
+            )
             if res:
                 self.et.reboot_program()
 
@@ -1360,16 +1300,14 @@ class ConfigureTab:
         frame2.pack(side=tk.LEFT, padx=20, anchor=tk.N)
 
         # 開始時
-        lfm1 = tk.LabelFrame(
-            frame2, text="開始時", font=(FONT_TYPE1, EXPAND(28), "bold"))
+        lfm1 = tk.LabelFrame(frame2, text="開始時", font=(FONT_TYPE1, EXPAND(28), "bold"))
         lfm1.pack(side=tk.TOP, pady=EXPAND(20))
 
         tfm6 = tk.Frame(lfm1)
         tfm6.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab6 = tk.Label(tfm6, text="起動時にアップデートを確認する　", font=font)
         lab6.pack(side=tk.LEFT)
-        self.tgb6 = ToggleButton(
-            tfm6, start=CONFIG["auto_update"], command=self.set_title, takefocus=False)
+        self.tgb6 = ToggleButton(tfm6, start=CONFIG["auto_update"], command=self.set_title, takefocus=False)
         self.tgb6.pack(side=tk.LEFT)
         self.tgb6.bind_instead_master(tfm6)
         self.tgb6.bind_instead_child(lab6)
@@ -1378,11 +1316,7 @@ class ConfigureTab:
         tfm7.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab7 = tk.Label(tfm7, text="前回開いていたファイルを開く　　", font=font)
         lab7.pack(side=tk.LEFT)
-        self.tgb7 = ToggleButton(
-            tfm7,
-            start=CONFIG["open_last_file"],
-            command=self.set_title,
-            takefocus=False)
+        self.tgb7 = ToggleButton(tfm7, start=CONFIG["open_last_file"], command=self.set_title, takefocus=False)
         self.tgb7.pack(side=tk.LEFT)
         self.tgb7.bind_instead_master(tfm7)
         self.tgb7.bind_instead_child(lab7)
@@ -1391,26 +1325,20 @@ class ConfigureTab:
         tfm4.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab4 = tk.Label(tfm4, text="画面の大きさをを調整する　　　　", font=font)
         lab4.pack(side=tk.LEFT)
-        self.tgb4 = ToggleButton(
-            tfm4, start=CONFIG["expand_window"], command=self.set_title, takefocus=False)
+        self.tgb4 = ToggleButton(tfm4, start=CONFIG["expand_window"], command=self.set_title, takefocus=False)
         self.tgb4.pack(side=tk.LEFT)
         self.tgb4.bind_instead_master(tfm4)
         self.tgb4.bind_instead_child(lab4)
 
         # ファイル
-        lfm2 = tk.LabelFrame(
-            frame2, text="ファイル", font=(FONT_TYPE1, EXPAND(28), "bold"))
+        lfm2 = tk.LabelFrame(frame2, text="ファイル", font=(FONT_TYPE1, EXPAND(28), "bold"))
         lfm2.pack(side=tk.TOP, pady=EXPAND(20))
 
         tfm1 = tk.Frame(lfm2)
         tfm1.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab1 = tk.Label(tfm1, text="より多くの情報を保存する　　　　", font=font)
         lab1.pack(side=tk.LEFT)
-        self.tgb1 = ToggleButton(
-            tfm1,
-            start=CONFIG["save_more_info"],
-            command=self.set_title,
-            takefocus=False)
+        self.tgb1 = ToggleButton(tfm1, start=CONFIG["save_more_info"], command=self.set_title, takefocus=False)
         self.tgb1.pack(side=tk.LEFT)
         self.tgb1.bind_instead_master(tfm1)
         self.tgb1.bind_instead_child(lab1)
@@ -1419,8 +1347,7 @@ class ConfigureTab:
         tfm2.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab2 = tk.Label(tfm2, text="古いファイルを変更するか確認する", font=font)
         lab2.pack(side=tk.LEFT)
-        self.tgb2 = ToggleButton(
-            tfm2, start=CONFIG["ask_save_new"], command=self.set_title, takefocus=False)
+        self.tgb2 = ToggleButton(tfm2, start=CONFIG["ask_save_new"], command=self.set_title, takefocus=False)
         self.tgb2.pack(side=tk.LEFT)
         self.tgb2.bind_instead_master(tfm2)
         self.tgb2.bind_instead_child(lab2)
@@ -1429,8 +1356,7 @@ class ConfigureTab:
         tfm5.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab5 = tk.Label(tfm5, text="ユーザードキュメントを使用する　", font=font)
         lab5.pack(side=tk.LEFT)
-        self.tgb5 = ToggleButton(
-            tfm5, start=CONFIG["user_document"], command=self.set_title, takefocus=False)
+        self.tgb5 = ToggleButton(tfm5, start=CONFIG["user_document"], command=self.set_title, takefocus=False)
         self.tgb5.pack(side=tk.LEFT)
         self.tgb5.bind_instead_master(tfm5)
         self.tgb5.bind_instead_child(lab5)
@@ -1439,11 +1365,7 @@ class ConfigureTab:
         tfm10.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab10 = tk.Label(tfm10, text="バックアップを有効化する　　　　", font=font)
         lab10.pack(side=tk.LEFT)
-        self.tgb10 = ToggleButton(
-            tfm10,
-            start=CONFIG["enable_backup"],
-            command=self.set_title,
-            takefocus=False)
+        self.tgb10 = ToggleButton(tfm10, start=CONFIG["enable_backup"], command=self.set_title, takefocus=False)
         self.tgb10.pack(side=tk.LEFT)
         self.tgb10.bind_instead_master(tfm10)
         self.tgb10.bind_instead_child(lab10)
@@ -1453,16 +1375,14 @@ class ConfigureTab:
         frame3.pack(side=tk.RIGHT, padx=10, anchor=tk.N)
 
         # その他
-        lfm3 = tk.LabelFrame(
-            frame3, text="その他", font=(FONT_TYPE1, EXPAND(28), "bold"))
+        lfm3 = tk.LabelFrame(frame3, text="その他", font=(FONT_TYPE1, EXPAND(28), "bold"))
         lfm3.pack(side=tk.TOP, pady=EXPAND(20))
 
         tfm3 = tk.Frame(lfm3)
         tfm3.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab3 = tk.Label(tfm3, text="警告と追加情報を表示する　　　　", font=font)
         lab3.pack(side=tk.LEFT)
-        self.tgb3 = ToggleButton(
-            tfm3, start=CONFIG["show_warning"], command=self.set_title, takefocus=False)
+        self.tgb3 = ToggleButton(tfm3, start=CONFIG["show_warning"], command=self.set_title, takefocus=False)
         self.tgb3.pack(side=tk.LEFT)
         self.tgb3.bind_instead_master(tfm3)
         self.tgb3.bind_instead_child(lab3)
@@ -1471,8 +1391,7 @@ class ConfigureTab:
         tfm8.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab8 = tk.Label(tfm8, text="コピーを他のタブと共有する　　　", font=font)
         lab8.pack(side=tk.LEFT)
-        self.tgb8 = ToggleButton(
-            tfm8, start=CONFIG["share_copy"], command=self.set_title, takefocus=False)
+        self.tgb8 = ToggleButton(tfm8, start=CONFIG["share_copy"], command=self.set_title, takefocus=False)
         self.tgb8.pack(side=tk.LEFT)
         self.tgb8.bind_instead_master(tfm8)
         self.tgb8.bind_instead_child(lab8)
@@ -1481,8 +1400,7 @@ class ConfigureTab:
         tfm9.pack(side=tk.TOP, anchor=tk.W, padx=EXPAND(10), pady=EXPAND(10))
         lab9 = tk.Label(tfm9, text="中クリックでの移動を有効化する　", font=font)
         lab9.pack(side=tk.LEFT)
-        self.tgb9 = ToggleButton(
-            tfm9, start=CONFIG["scroll_center"], command=self.set_title, takefocus=False)
+        self.tgb9 = ToggleButton(tfm9, start=CONFIG["scroll_center"], command=self.set_title, takefocus=False)
         self.tgb9.pack(side=tk.LEFT)
         self.tgb9.bind_instead_master(tfm9)
         self.tgb9.bind_instead_child(tfm9)
@@ -1491,17 +1409,19 @@ class ConfigureTab:
         frame4 = tk.Frame(frame3)
         frame4.pack(side=tk.TOP, pady=(EXPAND(80), 0))
 
-        but2 = tk.Button(
-            frame4, text="初期化", width=20, font=font, command=self.initialize)
+        but2 = tk.Button(frame4, text="初期化", width=20, font=font, command=self.initialize)
         but2.pack(padx=EXPAND(10), pady=(0, EXPAND(20)))
 
-        but1 = tk.Button(
-            frame4, text="決定", width=20, font=font, command=self.decide_config)
+        but1 = tk.Button(frame4, text="決定", width=20, font=font, command=self.decide_config)
         but1.pack(padx=EXPAND(10), pady=(0, EXPAND(20)))
 
         lab1 = tk.Label(
-            frame4, font=font, fg="red", text="\
-※画面サイズなどの一部の変更は\n　次回起動時より有効になります")
+            frame4,
+            font=font,
+            fg="red",
+            text="\
+※画面サイズなどの一部の変更は\n　次回起動時より有効になります",
+        )
         lab1.pack(padx=EXPAND(20), pady=(0, EXPAND(10)))
 
         # タイトルを設定
@@ -1596,7 +1516,7 @@ class ProgrammingTab:
         elif self.index > len(data) - SIZE:
             self.index = len(data) - SIZE
 
-        shown = data[self.index: self.index + SIZE]
+        shown = data[self.index : self.index + SIZE]
         for d in self.last_shown:
             d.place_cv()
         for d in shown:
@@ -1742,8 +1662,7 @@ class ProgrammingTab:
     def check_length(self):
         """データの大きさをチェック"""
         if (len(self.widgets) > 999) and CONFIG["show_warning"] and not self.warning_ignore:
-            messagebox.showwarning(
-                "警告", "大量のデータを保持すると正常に動作しなくなる可能性があります")
+            messagebox.showwarning("警告", "大量のデータを保持すると正常に動作しなくなる可能性があります")
             self.warning_ignore = True
 
     def set_scrollbar_posision(self):
@@ -1807,10 +1726,8 @@ class ProgrammingTab:
         self.index = (
             0
             if index <= 0
-            else (
-                max_size
-                if (index > max_size) and (len(data) > SIZE)
-                else self.index if len(data) <= SIZE else index))
+            else (max_size if (index > max_size) and (len(data) > SIZE) else self.index if len(data) <= SIZE else index)
+        )
         self.redraw_widgets(change=False)
 
     def kill_runner(self, event=None):
@@ -1893,7 +1810,8 @@ class ProgrammingTab:
         canvas.config(
             width=self.runner_size[0],
             height=self.runner_size[1],
-            scrollregion=(0, 0, self.runner_size[0], self.runner_size[1]))
+            scrollregion=(0, 0, self.runner_size[0], self.runner_size[1]),
+        )
         tur.penup()
         tur.speed(0)
         tur.goto(self.runner_size[0] // 2, self.runner_size[1] // -2)
@@ -1942,14 +1860,12 @@ line: {index+1}, {widget.__class__.__name__}\n\
                 file = self.program_name
             elif self.et.last_directory is not None:
                 file = filedialog.asksaveasfilename(
-                    parent=ROOT,
-                    initialdir=self.et.last_directory,
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=self.et.last_directory, filetypes=[("Jsonファイル", "*.json")]
+                )
             else:
                 file = filedialog.asksaveasfilename(
-                    parent=ROOT,
-                    initialdir=self.et.get_document_path(),
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=self.et.get_document_path(), filetypes=[("Jsonファイル", "*.json")]
+                )
 
         # ファイルが選択されていなければ終了
         if file == "":
@@ -1977,20 +1893,16 @@ line: {index+1}, {widget.__class__.__name__}\n\
                 directory = os.path.dirname(self.program_name)
                 name = self.basename
                 file = filedialog.asksaveasfilename(
-                    parent=ROOT,
-                    initialdir=directory,
-                    initialfile=name,
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=directory, initialfile=name, filetypes=[("Jsonファイル", "*.json")]
+                )
             elif self.et.last_directory is not None:
                 file = filedialog.asksaveasfilename(
-                    parent=ROOT,
-                    initialdir=self.et.last_directory,
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=self.et.last_directory, filetypes=[("Jsonファイル", "*.json")]
+                )
             else:
                 file = filedialog.asksaveasfilename(
-                    parent=ROOT,
-                    initialdir=self.et.get_document_path(),
-                    filetypes=[("Jsonファイル", "*.json")])
+                    parent=ROOT, initialdir=self.et.get_document_path(), filetypes=[("Jsonファイル", "*.json")]
+                )
 
         # ファイルが選択されていなければ終了
         if file == "":
@@ -2025,8 +1937,7 @@ line: {index+1}, {widget.__class__.__name__}\n\
             "canceled": self.canceled_changes,
             "name": self.program_name,
             "default": self.default_data,
-            "untitled": (
-                self.et.untitled_tabs[self] if self in self.et.untitled_tabs else None),
+            "untitled": (self.et.untitled_tabs[self] if self in self.et.untitled_tabs else None),
             "last": self.last_checked,
             "body": body,
         }
@@ -2046,9 +1957,7 @@ line: {index+1}, {widget.__class__.__name__}\n\
     def save_file(self, file, boot=False):
         """ファイルを保存する"""
         # データを取得
-        body = [
-            d.get_data(more=(boot or CONFIG["save_more_info"])) for d in self.widgets
-        ]
+        body = [d.get_data(more=(boot or CONFIG["save_more_info"])) for d in self.widgets]
 
         # データを決定
         if boot:
@@ -2064,10 +1973,7 @@ line: {index+1}, {widget.__class__.__name__}\n\
                 "position": self.ent1.get(),
                 "name": self.program_name,
                 "default": self.default_data,
-                "untitled": (
-                    self.et.untitled_tabs[self]
-                    if self in self.et.untitled_tabs
-                    else None),
+                "untitled": (self.et.untitled_tabs[self] if self in self.et.untitled_tabs else None),
                 "selected": self == self.et.get_currently_selected(),
                 "last": self.last_checked,
                 "body": body,
@@ -2273,7 +2179,8 @@ line: {index+1}, {widget.__class__.__name__}\n\
             messagebox.showwarning(
                 "警告",
                 "\
-位置が最大値を超えています\n自動で最後に追加します")
+位置が最大値を超えています\n自動で最後に追加します",
+            )
             return len(self.widgets)
         elif index < 1:
             messagebox.showerror("エラー", "位置は正の数で入力してください")
@@ -2287,7 +2194,8 @@ line: {index+1}, {widget.__class__.__name__}\n\
             "行へ移動",
             '\
 数値を入力してください\n\
-"-1"でプログラムの最後に移動します')
+"-1"でプログラムの最後に移動します',
+        )
         if (text == "") or (text is None):
             return 0
         try:
@@ -2302,7 +2210,8 @@ line: {index+1}, {widget.__class__.__name__}\n\
                 "警告",
                 "\
 位置が最大値を超えています\n\
-自動で最後に移動します")
+自動で最後に移動します",
+            )
             self.index = len(self.widgets) - SIZE
         elif line < 1:
             messagebox.showerror("エラー", "正の数値で入力してください")
@@ -2330,48 +2239,34 @@ line: {index+1}, {widget.__class__.__name__}\n\
         # 画面の左側上段を作成
         frame1 = tk.Frame(frame0)
         frame1.pack(side=tk.LEFT, padx=(10, 0))
-        self.cv0 = tk.Canvas(
-            frame1, width=EXPAND(WIDTH + 20), height=EXPAND(32), bg="#E6E6E6")
+        self.cv0 = tk.Canvas(frame1, width=EXPAND(WIDTH + 20), height=EXPAND(32), bg="#E6E6E6")
         self.cv0.pack(side=tk.TOP, fill=tk.X)
-        self.chk0 = CheckButton(
-            self.cv0, width=EXPAND(16), bg="#E6E6E6", margin=EXPAND(6))
+        self.chk0 = CheckButton(self.cv0, width=EXPAND(16), bg="#E6E6E6", margin=EXPAND(6))
         self.chk0.set_command(self.set_header)
         self.chk0.pack(side=tk.LEFT, padx=EXPAND(12), pady=(EXPAND(8), EXPAND(4)))
         self.var1 = tk.StringVar()
-        lab1 = tk.Label(
-            self.cv0,
-            textvariable=self.var1,
-            bg="#E6E6E6",
-            font=(FONT_TYPE1, EXPAND(12), "bold"))
+        lab1 = tk.Label(self.cv0, textvariable=self.var1, bg="#E6E6E6", font=(FONT_TYPE1, EXPAND(12), "bold"))
         lab1.pack(side=tk.LEFT, padx=EXPAND(12), pady=(EXPAND(8), EXPAND(4)))
 
         # 画面の左側下段を作成
         frame2 = tk.Frame(frame1)
         frame2.pack(side=tk.TOP)
-        self.cv1 = tk.Canvas(
-            frame2, width=EXPAND(WIDTH), height=EXPAND(HEIGHT * SIZE), bg="#E6E6E6")
+        self.cv1 = tk.Canvas(frame2, width=EXPAND(WIDTH), height=EXPAND(HEIGHT * SIZE), bg="#E6E6E6")
         self.cv1.pack(side=tk.LEFT)
-        self.cv1.create_rectangle(
-            EXPAND(4), EXPAND(4), EXPAND(WIDTH), EXPAND(HEIGHT * SIZE), width=EXPAND(2))
-        self.scr2 = ttk.Scrollbar(
-            frame2, orient=tk.VERTICAL, command=self.scroll_button_clicked)
+        self.cv1.create_rectangle(EXPAND(4), EXPAND(4), EXPAND(WIDTH), EXPAND(HEIGHT * SIZE), width=EXPAND(2))
+        self.scr2 = ttk.Scrollbar(frame2, orient=tk.VERTICAL, command=self.scroll_button_clicked)
         self.scr2.pack(fill=tk.Y, side=tk.LEFT)
         frame3 = tk.Frame(frame0)
         frame3.pack(side=tk.RIGHT, padx=EXPAND(10))
         lab0 = tk.Label(
-            self.cv1,
-            text="EasyTurtle",
-            fg="#D8D8D8",
-            bg="#E6E6E6",
-            font=(FONT_TYPE2, EXPAND(56), "bold", "italic"))
+            self.cv1, text="EasyTurtle", fg="#D8D8D8", bg="#E6E6E6", font=(FONT_TYPE2, EXPAND(56), "bold", "italic")
+        )
         lab0.place(x=EXPAND(80), y=EXPAND(210))
 
         # 画面右側中段を作成
         lfr1 = tk.LabelFrame(
-            frame3,
-            text="ウィジェットの追加位置",
-            font=(FONT_TYPE1, EXPAND(18), "bold"),
-            labelanchor=tk.N)
+            frame3, text="ウィジェットの追加位置", font=(FONT_TYPE1, EXPAND(18), "bold"), labelanchor=tk.N
+        )
         lfr1.pack(side=tk.BOTTOM, pady=EXPAND(30), fill=tk.X)
         self.var2 = RadioVar()
         font = (FONT_TYPE1, EXPAND(16), "bold")
@@ -2403,8 +2298,7 @@ line: {index+1}, {widget.__class__.__name__}\n\
         rad3.bind_instead_child(lab3)
         frm0 = tk.Frame(lfr1)
         frm0.pack(anchor=tk.E, padx=EXPAND(60), pady=(0, EXPAND(10)))
-        self.chk1 = CheckButton(
-            frm0, width=EXPAND(12), bg=BGCOLOR, start=True, takefocus=False)
+        self.chk1 = CheckButton(frm0, width=EXPAND(12), bg=BGCOLOR, start=True, takefocus=False)
         self.chk1.pack(side=tk.LEFT)
         lab1 = tk.Label(frm0, text="位置の自動調整", font=font)
         lab1.pack(side=tk.LEFT)
@@ -2428,7 +2322,8 @@ line: {index+1}, {widget.__class__.__name__}\n\
             bg="#FFEFD7",
             font=(FONT_TYPE1, EXPAND(18)),
             selectbackground="#2F4FAF",
-            selectforeground="#FFFFFF")
+            selectforeground="#FFFFFF",
+        )
         self.lsb1.bind("<<ListboxSelect>>", self.append_new_widget)
         self.lsb1.pack(fill=tk.Y, side=tk.LEFT)
         scr1 = ttk.Scrollbar(frame7, orient=tk.VERTICAL, command=self.lsb1.yview)
@@ -2454,7 +2349,8 @@ class ToggleButton(tk.Canvas):
         margin=EXPAND(4),
         gray=False,
         takefocus=True,
-        command=None):
+        command=None,
+    ):
 
         self.foreground = fg
         self.background1 = bg1
@@ -2474,19 +2370,12 @@ class ToggleButton(tk.Canvas):
 
         if master is not None:
             tk.Canvas.__init__(
-                self,
-                master,
-                width=self.cvw,
-                height=self.cvh,
-                takefocus=self.takefocus,
-                highlightbackground=BGCOLOR)
+                self, master, width=self.cvw, height=self.cvh, takefocus=self.takefocus, highlightbackground=BGCOLOR
+            )
         else:
             tk.Canvas.__init__(
-                self,
-                width=self.cvw,
-                height=self.cvh,
-                takefocus=self.takefocus,
-                highlightbackground=BGCOLOR)
+                self, width=self.cvw, height=self.cvh, takefocus=self.takefocus, highlightbackground=BGCOLOR
+            )
 
         if gray:
             self.draw_gray()
@@ -2512,11 +2401,7 @@ class ToggleButton(tk.Canvas):
     def bind_instead_master(self, widget: tk.Widget):
         widget.bind("<KeyRelease-space>", self.slider_press)
         widget.bind("<ButtonPress-1>", self.slider_press)
-        widget.configure(
-            cursor="hand2",
-            takefocus=True,
-            highlightthickness=2,
-            highlightbackground=BGCOLOR)
+        widget.configure(cursor="hand2", takefocus=True, highlightthickness=2, highlightbackground=BGCOLOR)
 
     def bind_instead_child(self, widget: tk.Widget):
         widget.bind("<ButtonPress-1>", self.slider_press)
@@ -2533,7 +2418,8 @@ class ToggleButton(tk.Canvas):
                 self.radius + self.margin + self.height // 2 + width + 1,
                 width=0,
                 fill=background,
-                tag="gray")
+                tag="gray",
+            )
 
             self.create_arc(
                 self.radius - self.height // 2 + self.margin - width,
@@ -2544,7 +2430,8 @@ class ToggleButton(tk.Canvas):
                 fill=background,
                 start=90,
                 extent=180,
-                tag="gray")
+                tag="gray",
+            )
 
             self.create_arc(
                 self.radius - self.height // 2 + self.margin + self.width - width,
@@ -2555,7 +2442,8 @@ class ToggleButton(tk.Canvas):
                 fill=background,
                 start=-90,
                 extent=180,
-                tag="gray")
+                tag="gray",
+            )
         else:
             self.create_rectangle(
                 self.height // 2 + self.margin,
@@ -2564,7 +2452,8 @@ class ToggleButton(tk.Canvas):
                 self.height + self.margin + width + 1,
                 width=0,
                 fill="gray",
-                tag="gray")
+                tag="gray",
+            )
 
             self.create_arc(
                 self.margin - width,
@@ -2575,7 +2464,8 @@ class ToggleButton(tk.Canvas):
                 fill="gray",
                 start=90,
                 extent=180,
-                tag="gray")
+                tag="gray",
+            )
 
             self.create_arc(
                 self.margin + self.width - width,
@@ -2586,7 +2476,8 @@ class ToggleButton(tk.Canvas):
                 fill="gray",
                 start=-90,
                 extent=180,
-                tag="gray")
+                tag="gray",
+            )
 
     def redraw_background(self):
         self.delete("background")
@@ -2599,7 +2490,8 @@ class ToggleButton(tk.Canvas):
                 self.radius + self.margin + self.height // 2 + 1,
                 width=0,
                 fill=background,
-                tag="background")
+                tag="background",
+            )
 
             self.create_arc(
                 self.radius - self.height // 2 + self.margin,
@@ -2610,7 +2502,8 @@ class ToggleButton(tk.Canvas):
                 fill=background,
                 start=90,
                 extent=180,
-                tag="background")
+                tag="background",
+            )
 
             self.create_arc(
                 self.radius - self.height // 2 + self.margin + self.width,
@@ -2621,7 +2514,8 @@ class ToggleButton(tk.Canvas):
                 fill=background,
                 start=-90,
                 extent=180,
-                tag="background")
+                tag="background",
+            )
         else:
             self.create_rectangle(
                 self.height // 2 + self.margin,
@@ -2630,7 +2524,8 @@ class ToggleButton(tk.Canvas):
                 self.height + self.margin + 1,
                 width=0,
                 fill=background,
-                tag="background")
+                tag="background",
+            )
 
             self.create_arc(
                 self.margin,
@@ -2641,7 +2536,8 @@ class ToggleButton(tk.Canvas):
                 fill=background,
                 start=90,
                 extent=180,
-                tag="background")
+                tag="background",
+            )
 
             self.create_arc(
                 self.margin + self.width,
@@ -2652,7 +2548,8 @@ class ToggleButton(tk.Canvas):
                 fill=background,
                 start=-90,
                 extent=180,
-                tag="background")
+                tag="background",
+            )
 
     def redraw_slider(self):
         self.delete("slider")
@@ -2665,7 +2562,8 @@ class ToggleButton(tk.Canvas):
                 fill=self.foreground,
                 tag="slider",
                 outline=self.outline,
-                width=2)
+                width=2,
+            )
         else:
             self.slider = self.create_oval(
                 self.height // 2 - self.radius + self.margin + self.position,
@@ -2675,7 +2573,8 @@ class ToggleButton(tk.Canvas):
                 fill=self.foreground,
                 tag="slider",
                 outline=self.outline,
-                width=2)
+                width=2,
+            )
 
     def slider_press(self, event):
         self.frompos = self.width if self.current else 0
@@ -2691,8 +2590,7 @@ class ToggleButton(tk.Canvas):
         if self.move >= self.smooth:
             return
         self.move += 1
-        self.position = (
-            self.frompos * (self.smooth - self.move) + self.topos * self.move) // self.smooth
+        self.position = (self.frompos * (self.smooth - self.move) + self.topos * self.move) // self.smooth
         self.redraw_slider()
         self.after(10, self.move_slider)
 
@@ -2727,14 +2625,8 @@ class CheckButton(tk.Canvas):
     INDETERMINATE = 2
 
     def __init__(
-        self,
-        master=None,
-        bg=BGCOLOR,
-        width=EXPAND(24),
-        start=False,
-        margin=EXPAND(4),
-        takefocus=True,
-        command=None):
+        self, master=None, bg=BGCOLOR, width=EXPAND(24), start=False, margin=EXPAND(4), takefocus=True, command=None
+    ):
 
         self.color1 = "white"
         self.color2 = bg
@@ -2756,7 +2648,8 @@ class CheckButton(tk.Canvas):
                 height=width + self.margin * 2,
                 takefocus=self.takefocus,
                 bg=bg,
-                highlightbackground=bg)
+                highlightbackground=bg,
+            )
         else:
             tk.Canvas.__init__(
                 self,
@@ -2764,7 +2657,8 @@ class CheckButton(tk.Canvas):
                 height=width + self.margin * 2,
                 takefocus=self.takefocus,
                 bg=bg,
-                highlightbackground=bg)
+                highlightbackground=bg,
+            )
 
         # Base64のDataURI
         self.image = (
@@ -2782,9 +2676,11 @@ class CheckButton(tk.Canvas):
             CdCohN7wbAFICRbgRQIQEqzAiwXUSLAEXyVAIsEafLUAjgSL8BABVAnhRNnyhEe5
             BcME5CRYnfkoiHQSpNps3U6n5pW7DirgWAnhfe5HyojkETHgAqKEjwCV+AhwlSWA
             TKxVLPMzpC1iCdA2bD3+qgDrM6Sd36oAbcPW49++At5aYFBfS24sggAAAABJRU5E
-            rkJggg==""")
+            rkJggg=="""
+            )
             .zoom(self.width)
-            .subsample(72))
+            .subsample(72)
+        )
         self.minus = (
             tk.PhotoImage(
                 data="""
@@ -2794,9 +2690,11 @@ class CheckButton(tk.Canvas):
             JMf6q2qac/qjQ/j3zq1KuCygU/i7Ek4FjDH2zHw09rPFjzEiM38ynwrouPsrCq4U
             2Ftu/zfUmoCIYBeAVwB/CB6qdKRgdhfwIrQ68TuQ8PdVuPko/MTzPYCy07OcEiAB
             8AZUAA6Aj6IqoALwBlQADoBTQAVUAN6ACsABcAqogArAG1ABOADxAn6KSEGt6UZn
-            AAAAAElFTkSuQmCC""")
+            AAAAAElFTkSuQmCC"""
+            )
             .zoom(self.width)
-            .subsample(72))
+            .subsample(72)
+        )
 
         self.redraw_check()
 
@@ -2813,11 +2711,7 @@ class CheckButton(tk.Canvas):
     def bind_instead_master(self, widget: tk.Widget):
         widget.bind("<KeyRelease-space>", self.check_press)
         widget.bind("<ButtonPress-1>", self.check_press)
-        widget.configure(
-            cursor="hand2",
-            takefocus=True,
-            highlightthickness=2,
-            highlightbackground=self.color2)
+        widget.configure(cursor="hand2", takefocus=True, highlightthickness=2, highlightbackground=self.color2)
 
     def bind_instead_child(self, widget: tk.Widget):
         widget.bind("<ButtonPress-1>", self.check_press)
@@ -2832,19 +2726,16 @@ class CheckButton(tk.Canvas):
             self.width + self.margin,
             width=width,
             fill=self.color1,
-            tag="check")
+            tag="check",
+        )
         if self.current == self.CHECKED:
             self.create_image(
-                self.width // 2 + self.margin,
-                self.width // 2 + self.margin,
-                image=self.image,
-                tag="check")
+                self.width // 2 + self.margin, self.width // 2 + self.margin, image=self.image, tag="check"
+            )
         elif self.current == self.INDETERMINATE:
             self.create_image(
-                self.width // 2 + self.margin,
-                self.width // 2 + self.margin,
-                image=self.minus,
-                tag="check")
+                self.width // 2 + self.margin, self.width // 2 + self.margin, image=self.minus, tag="check"
+            )
 
     def check_press(self, event):
         self.current = int(not bool(self.current))
@@ -2937,7 +2828,8 @@ class RadioButton(tk.Canvas):
         radius=EXPAND(2),
         line=EXPAND(1),
         margin=EXPAND(4),
-        takefocus=True):
+        takefocus=True,
+    ):
 
         self.color1 = bg
         self.color2 = "black"
@@ -2961,7 +2853,8 @@ class RadioButton(tk.Canvas):
                 height=width + self.margin * 2,
                 takefocus=self.takefocus,
                 bg=self.color1,
-                highlightbackground=self.color1)
+                highlightbackground=self.color1,
+            )
         else:
             tk.Canvas.__init__(
                 self,
@@ -2969,7 +2862,8 @@ class RadioButton(tk.Canvas):
                 height=width + self.margin * 2,
                 takefocus=self.takefocus,
                 bg=self.color1,
-                highlightbackground=self.color1)
+                highlightbackground=self.color1,
+            )
 
         self.redraw_check()
 
@@ -2984,11 +2878,7 @@ class RadioButton(tk.Canvas):
     def bind_instead_master(self, widget: tk.Widget):
         widget.bind("<KeyRelease-space>", self.check_press)
         widget.bind("<ButtonPress-1>", self.check_press)
-        widget.configure(
-            cursor="hand2",
-            takefocus=True,
-            highlightthickness=2,
-            highlightbackground=self.color1)
+        widget.configure(cursor="hand2", takefocus=True, highlightthickness=2, highlightbackground=self.color1)
 
     def bind_instead_child(self, widget: tk.Widget):
         widget.bind("<ButtonPress-1>", self.check_press)
@@ -3003,14 +2893,16 @@ class RadioButton(tk.Canvas):
                 self.width + self.margin,
                 width=self.line,
                 fill=self.color3,
-                tag="radio")
+                tag="radio",
+            )
             self.create_oval(
                 self.margin + self.width // 2 - self.radius,
                 self.margin + self.width // 2 - self.radius,
                 self.margin + self.width // 2 + self.radius,
                 self.margin + self.width // 2 + self.radius,
                 fill=self.color2,
-                tag="radio")
+                tag="radio",
+            )
         else:
             self.create_oval(
                 self.margin,
@@ -3019,7 +2911,8 @@ class RadioButton(tk.Canvas):
                 self.width + self.margin,
                 width=self.line,
                 fill=self.color3,
-                tag="radio")
+                tag="radio",
+            )
 
     def check_press(self, event):
         self.variable.set(self)
@@ -3076,7 +2969,8 @@ class Notebook(tk.Canvas):
         master=None,
         height=EXPAND(32),
         margin=EXPAND(8),
-        font=(FONT_TYPE1, EXPAND(12), "bold")):
+        font=(FONT_TYPE1, EXPAND(12), "bold"),
+    ):
 
         self.et = parent
 
@@ -3117,18 +3011,12 @@ class Notebook(tk.Canvas):
             font=self.font,
             cursor="hand2",
             compound=tk.CENTER,
-            command=self.et.new_program)
+            command=self.et.new_program,
+        )
 
     def add_tab(self, frame):
         width = self.font.measure("×") + self.margin * 3
-        cv = tk.Canvas(
-            self.frame,
-            height=self.height,
-            width=width,
-            bg=GRAY,
-            cursor="hand2",
-            relief=tk.RAISED,
-            bd=2)
+        cv = tk.Canvas(self.frame, height=self.height, width=width, bg=GRAY, cursor="hand2", relief=tk.RAISED, bd=2)
         cv.title = ""
         cv.bind("<Button-1>", lambda e: self.clicked_left(cv))
         cv.bind("<ButtonRelease-1>", lambda e: self.release_left(cv))
@@ -3252,14 +3140,16 @@ class Notebook(tk.Canvas):
             (self.height + self.margin) // 2 + self.adjust,
             fill=bg,
             outline=bg,
-            tag="close")
+            tag="close",
+        )
         cv.create_text(
             twidth + self.margin * 2 + cwidth // 2,
             self.height // 2 + self.adjust,
             text="×",
             font=self.font,
             fill="red",
-            tag="close")
+            tag="close",
+        )
 
     def set_title(self, index, title):
         twidth = self.font.measure(title)
@@ -3269,11 +3159,8 @@ class Notebook(tk.Canvas):
         cv.config(width=twidth + cwidth + self.margin * 3)
         cv.delete("title")
         cv.create_text(
-            twidth // 2 + self.margin,
-            self.height // 2 + self.adjust,
-            text=title,
-            font=self.font,
-            tag="title")
+            twidth // 2 + self.margin, self.height // 2 + self.adjust, text=title, font=self.font, tag="title"
+        )
         self.draw_close(index)
 
 
@@ -3365,25 +3252,15 @@ class Widget:
     def draw_cv(self):
         """キャンバスを描く"""
         # キャンバスを表示
-        self.cv = tk.Canvas(
-            self.tab.cv1, width=EXPAND(WIDTH), height=EXPAND(HEIGHT), bg=self.background)
+        self.cv = tk.Canvas(self.tab.cv1, width=EXPAND(WIDTH), height=EXPAND(HEIGHT), bg=self.background)
         self.binder(self.cv)
 
         # キャンバスの枠を表示
+        self.cv.create_rectangle(EXPAND(42), EXPAND(4), EXPAND(WIDTH), EXPAND(HEIGHT // 2 + 2), width=EXPAND(2))
         self.cv.create_rectangle(
-            EXPAND(42),
-            EXPAND(4),
-            EXPAND(WIDTH),
-            EXPAND(HEIGHT // 2 + 2),
-            width=EXPAND(2))
-        self.cv.create_rectangle(
-            EXPAND(42),
-            EXPAND(HEIGHT // 2 + 2),
-            EXPAND(WIDTH),
-            EXPAND(HEIGHT - 2),
-            width=EXPAND(2))
-        self.cv.create_rectangle(
-            EXPAND(4), EXPAND(4), EXPAND(42), EXPAND(HEIGHT - 2), width=EXPAND(2))
+            EXPAND(42), EXPAND(HEIGHT // 2 + 2), EXPAND(WIDTH), EXPAND(HEIGHT - 2), width=EXPAND(2)
+        )
+        self.cv.create_rectangle(EXPAND(4), EXPAND(4), EXPAND(42), EXPAND(HEIGHT - 2), width=EXPAND(2))
 
         # ウィジェットの説明を表示
         lab1 = tk.Label(self.cv, text=self.info, font=FONT, bg=self.background)
@@ -3392,17 +3269,12 @@ class Widget:
         self.check_enabled()
 
         # インデックスを表示
-        self.lab4 = tk.Label(
-            self.cv,
-            font=FONT,
-            bg=self.background,
-            text=f"{self.tab.widgets.index(self)+1:03}")
+        self.lab4 = tk.Label(self.cv, font=FONT, bg=self.background, text=f"{self.tab.widgets.index(self)+1:03}")
         self.binder(self.lab4)
         self.lab4.place(x=EXPAND(6), y=EXPAND(HEIGHT // 2 - 12))
 
         # チェックボックスを表示
-        self.chk1 = CheckButton(
-            self.cv, width=EXPAND(12), bg=self.background, margin=EXPAND(4))
+        self.chk1 = CheckButton(self.cv, width=EXPAND(12), bg=self.background, margin=EXPAND(4))
         self.chk1.set_parent(self.tab.chk0)
         self.binder(self.chk1)
         self.chk1.set(self.check)
@@ -3464,7 +3336,9 @@ class Widget:
             else (
                 max_size
                 if (index > max_size) and (len(data) > SIZE)
-                else self.tab.index if len(data) <= SIZE else index))
+                else self.tab.index if len(data) <= SIZE else index
+            )
+        )
         self.tab.redraw_widgets(change=False)
 
     def scroll_on_linux(self, event: tk.Event):
@@ -3478,7 +3352,9 @@ class Widget:
             else (
                 max_size
                 if (index > max_size) and (len(data) > SIZE)
-                else self.tab.index if len(data) <= SIZE else index))
+                else self.tab.index if len(data) <= SIZE else index
+            )
+        )
         self.tab.redraw_widgets(change=False)
 
     def drag_move(self, event: tk.Event):
@@ -3519,7 +3395,7 @@ class Widget:
             widget.chk1.set(False)
 
         # 指定範囲をチェックする
-        for widget in self.tab.widgets[first: last + 1]:
+        for widget in self.tab.widgets[first : last + 1]:
             widget.chk1.set(True)
 
         # excは除外する
@@ -3538,7 +3414,8 @@ class Widget:
             width=2,
             outline="lightgray",
             fill=color,
-            tag="enabled")
+            tag="enabled",
+        )
 
     def paste_up(self):
         """上へのペースト"""
@@ -3617,13 +3494,10 @@ class Widget:
             if len(self.tab.copied_widgets) == 0:
                 states[4] = "disabled"
 
-        self.et.menu.add_command(
-            label="１番上に移動", command=self.top, state=states[0])
-        self.et.menu.add_command(
-            label="１番下に移動", command=self.bottom, state=states[1])
+        self.et.menu.add_command(label="１番上に移動", command=self.top, state=states[0])
+        self.et.menu.add_command(label="１番下に移動", command=self.bottom, state=states[1])
         self.et.menu.add_command(label="１個上に移動", command=self.up, state=states[2])
-        self.et.menu.add_command(
-            label="１個下に移動", command=self.down, state=states[3])
+        self.et.menu.add_command(label="１個下に移動", command=self.down, state=states[3])
 
         self.et.menu.add_separator()
         self.et.menu.add_command(label="コピー", command=self.copy)
@@ -3646,10 +3520,8 @@ class Widget:
             self.et.menu.add_command(label="有効化", command=self.enable)
 
         self.et.menu.add_separator()
-        self.et.menu.add_command(
-            label="上にペースト", command=self.paste_up, state=states[4])
-        self.et.menu.add_command(
-            label="下にペースト", command=self.paste_down, state=states[4])
+        self.et.menu.add_command(label="上にペースト", command=self.paste_up, state=states[4])
+        self.et.menu.add_command(label="下にペースト", command=self.paste_down, state=states[4])
 
         self.et.menu.post(event.x_root, event.y_root)
 
@@ -3792,8 +3664,7 @@ class Widget:
         self.et.menu = tk.Menu(ROOT, tearoff=0, font=menu_font)
 
         self.et.menu.add_command(label="コピー", command=lambda: self.copy_entry(entry))
-        self.et.menu.add_command(
-            label="ペースト", state=paste, command=lambda: self.paste_entry(entry))
+        self.et.menu.add_command(label="ペースト", state=paste, command=lambda: self.paste_entry(entry))
         self.et.menu.post(event.x_root, event.y_root)
 
     def str2str(self, string: str):
@@ -3805,7 +3676,8 @@ class Widget:
                     "エラー",
                     f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-変数"{name}"は定義されていません')
+変数"{name}"は定義されていません',
+                )
                 self.tab.kill_runner()
                 return ""
             elif self.tab.variable_datas[name][1] == "S" or not CONFIG["show_warning"]:
@@ -3815,7 +3687,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                     "警告",
                     f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-変数"{name}"はString型ではありません')
+変数"{name}"はString型ではありません',
+                )
                 string = string.replace(var, str(self.tab.variable_datas[name][0]))
         return string
 
@@ -3830,7 +3703,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                     "エラー",
                     f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-変数"{name}"は定義されていません')
+変数"{name}"は定義されていません',
+                )
                 self.tab.kill_runner()
                 return False
             elif self.tab.variable_datas[name][1] == "B" or not CONFIG["show_warning"]:
@@ -3840,7 +3714,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                     "警告",
                     f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-変数"{name}"はBoolean型ではありません')
+変数"{name}"はBoolean型ではありません',
+                )
                 string = string.replace(var, str(self.tab.variable_datas[name][0]))
         if string == "True":
             boolean = True
@@ -3851,7 +3726,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                 "エラー",
                 f"\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-{string}はBoolean型ではありません")
+{string}はBoolean型ではありません",
+            )
             self.tab.kill_runner()
             return False
         return boolean
@@ -3865,7 +3741,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                     "エラー",
                     f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-変数"{name}"は定義されていません')
+変数"{name}"は定義されていません',
+                )
                 self.tab.kill_runner()
             elif self.tab.variable_datas[name][1] == "N" or not CONFIG["show_warning"]:
                 string = string.replace(var, str(self.tab.variable_datas[name][0]))
@@ -3874,7 +3751,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                     "警告",
                     f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-変数"{name}"はNumber型ではありません')
+変数"{name}"はNumber型ではありません',
+                )
                 string = string.replace(var, str(self.tab.variable_datas[name][0]))
         return string
 
@@ -3886,7 +3764,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                 "エラー",
                 f"\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-値が入力されていません")
+値が入力されていません",
+            )
             self.tab.kill_runner()
         operators = ["**", "*", "//", "/", "%", "+", "-", "(", ")"]
         formulas = [string]
@@ -3920,7 +3799,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                 "エラー",
                 f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-"{string}"を数値に変換できませんでした')
+"{string}"を数値に変換できませんでした',
+            )
             self.tab.kill_runner()
             return 0.0
 
@@ -3932,7 +3812,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                 "警告",
                 f"\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-値は整数でなければなりません")
+値は整数でなければなりません",
+            )
         return int(round(num))
 
     def str2uint(self, string: str):
@@ -3943,7 +3824,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                 "エラー",
                 f"\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-値は正の整数でなければなりません")
+値は正の整数でなければなりません",
+            )
             self.tab.kill_runner()
             return 0
         else:
@@ -3957,7 +3839,8 @@ line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
                 "エラー",
                 f"\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
-値は正の小数でなければなりません")
+値は正の小数でなければなりません",
+            )
             self.tab.kill_runner()
             return 0.0
         else:
@@ -4180,8 +4063,7 @@ class ScreenSize(Widget):
         winx = maxwidth + self.tab.scrollbar_width
         winy = maxheight + self.tab.scrollbar_width
         self.tab.win.geometry(f"{winx}x{winy}")
-        canvas.config(
-            width=width, height=height, scrollregion=(0, 0, maxwidth, maxheight))
+        canvas.config(width=width, height=height, scrollregion=(0, 0, maxwidth, maxheight))
         canvas.xview_moveto((1 - width / maxwidth) / 2)
         canvas.yview_moveto((1 - height / maxheight) / 2)
 
@@ -4196,9 +4078,8 @@ class ScreenSize(Widget):
         # すべての要素を移動
         for element_id in canvas.find_all():
             canvas.move(
-                element_id,
-                (maxwidth - self.tab.runner_size[0]) // 2,
-                (maxheight - self.tab.runner_size[1]) // 2)
+                element_id, (maxwidth - self.tab.runner_size[0]) // 2, (maxheight - self.tab.runner_size[1]) // 2
+            )
 
         # データを変更
         self.tab.runner_size = (maxwidth, maxheight)
@@ -4373,8 +4254,8 @@ class GoTo(Widget):
     def run(self, tur: turtle.RawTurtle):
         self.save_data()
         tur.goto(
-            self.str2int(self.x) + self.tab.runner_size[0] // 2,
-            self.str2int(self.y) - self.tab.runner_size[1] // 2)
+            self.str2int(self.x) + self.tab.runner_size[0] // 2, self.str2int(self.y) - self.tab.runner_size[1] // 2
+        )
 
 
 class SetX(Widget):
@@ -4556,8 +4437,7 @@ class ToWards(Widget):
 
     def get_data(self, more=True):
         self.save_data()
-        return self.get_class_data(
-            {"x": self.x, "y": self.y, "angle": self.angle}, more)
+        return self.get_class_data({"x": self.x, "y": self.y, "angle": self.angle}, more)
 
     def draw(self):
         self.draw_cv()
@@ -4591,8 +4471,8 @@ class ToWards(Widget):
     def run(self, tur: turtle.RawTurtle):
         self.save_data()
         angle = tur.towards(
-            self.str2int(self.x) + self.tab.runner_size[0] // 2,
-            self.str2int(self.y) - self.tab.runner_size[1] // 2)
+            self.str2int(self.x) + self.tab.runner_size[0] // 2, self.str2int(self.y) - self.tab.runner_size[1] // 2
+        )
         self.tab.variable_datas[self.angle] = (angle, "N")
 
 
@@ -4610,8 +4490,7 @@ class Distance(Widget):
 
     def get_data(self, more=True):
         self.save_data()
-        return self.get_class_data(
-            {"x": self.x, "y": self.y, "distance": self.distance}, more)
+        return self.get_class_data({"x": self.x, "y": self.y, "distance": self.distance}, more)
 
     def draw(self):
         self.draw_cv()
@@ -4645,8 +4524,8 @@ class Distance(Widget):
     def run(self, tur: turtle.RawTurtle):
         self.save_data()
         distance = tur.distance(
-            self.str2int(self.x) + self.tab.runner_size[0] // 2,
-            self.str2int(self.y) - self.tab.runner_size[1] // 2)
+            self.str2int(self.x) + self.tab.runner_size[0] // 2, self.str2int(self.y) - self.tab.runner_size[1] // 2
+        )
         self.tab.variable_datas[self.distance] = (distance, "N")
 
 
@@ -5021,13 +4900,7 @@ class Color(Widget):
         self.binder(lab2)
         lab2.place(x=EXPAND(50), y=EXPAND(HEIGHT // 2 + 10) - 6)
         strvar = tk.StringVar()
-        self.ent1 = tk.Entry(
-            self.cv,
-            font=FONT,
-            width=12,
-            justify=tk.RIGHT,
-            validate="all",
-            textvariable=strvar)
+        self.ent1 = tk.Entry(self.cv, font=FONT, width=12, justify=tk.RIGHT, validate="all", textvariable=strvar)
         self.ent1.config(vcmd=(self.ent1.register(self.preview_color)))
         strvar.set(self.color)
         self.binder(self.ent1)
@@ -5055,7 +4928,8 @@ class Color(Widget):
                 fill=color,
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
         except tk.TclError:
             self.cv.create_rectangle(
                 EXPAND(280),
@@ -5065,7 +4939,8 @@ class Color(Widget):
                 fill="black",
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
 
     def show_option(self):
         color = self.ent1.get()
@@ -5091,7 +4966,8 @@ class Color(Widget):
                 f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
 "{self.color}"を色として認識できませんでした',
-                parent=ROOT)
+                parent=ROOT,
+            )
             self.tab.kill_runner()
 
 
@@ -5115,13 +4991,7 @@ class PenColor(Widget):
         self.binder(lab2)
         lab2.place(x=EXPAND(50), y=EXPAND(HEIGHT // 2 + 10) - 6)
         strvar = tk.StringVar()
-        self.ent1 = tk.Entry(
-            self.cv,
-            font=FONT,
-            width=12,
-            justify=tk.RIGHT,
-            validate="all",
-            textvariable=strvar)
+        self.ent1 = tk.Entry(self.cv, font=FONT, width=12, justify=tk.RIGHT, validate="all", textvariable=strvar)
         self.ent1.config(vcmd=(self.ent1.register(self.preview_color)))
         strvar.set(self.color)
         self.binder(self.ent1)
@@ -5149,7 +5019,8 @@ class PenColor(Widget):
                 fill=color,
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
         except tk.TclError:
             self.cv.create_rectangle(
                 EXPAND(280),
@@ -5159,7 +5030,8 @@ class PenColor(Widget):
                 fill="black",
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
 
     def show_option(self):
         color = self.ent1.get()
@@ -5185,7 +5057,8 @@ class PenColor(Widget):
                 f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
 "{self.color}"を色として認識できませんでした',
-                parent=ROOT)
+                parent=ROOT,
+            )
             self.tab.kill_runner()
 
 
@@ -5209,13 +5082,7 @@ class FillColor(Widget):
         self.binder(lab2)
         lab2.place(x=EXPAND(50), y=EXPAND(HEIGHT // 2 + 10) - 6)
         strvar = tk.StringVar()
-        self.ent1 = tk.Entry(
-            self.cv,
-            font=FONT,
-            width=12,
-            justify=tk.RIGHT,
-            validate="all",
-            textvariable=strvar)
+        self.ent1 = tk.Entry(self.cv, font=FONT, width=12, justify=tk.RIGHT, validate="all", textvariable=strvar)
         self.ent1.config(vcmd=(self.ent1.register(self.preview_color)))
         strvar.set(self.color)
         self.binder(self.ent1)
@@ -5243,7 +5110,8 @@ class FillColor(Widget):
                 fill=color,
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
         except tk.TclError:
             self.cv.create_rectangle(
                 EXPAND(280),
@@ -5253,7 +5121,8 @@ class FillColor(Widget):
                 fill="black",
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
 
     def show_option(self):
         color = self.ent1.get()
@@ -5279,7 +5148,8 @@ class FillColor(Widget):
                 f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
 "{self.color}"を色として認識できませんでした',
-                parent=ROOT)
+                parent=ROOT,
+            )
             self.tab.kill_runner()
 
 
@@ -5303,13 +5173,7 @@ class BGColor(Widget):
         self.binder(lab2)
         lab2.place(x=EXPAND(50), y=EXPAND(HEIGHT // 2 + 10) - 6)
         strvar = tk.StringVar()
-        self.ent1 = tk.Entry(
-            self.cv,
-            font=FONT,
-            width=12,
-            justify=tk.RIGHT,
-            validate="all",
-            textvariable=strvar)
+        self.ent1 = tk.Entry(self.cv, font=FONT, width=12, justify=tk.RIGHT, validate="all", textvariable=strvar)
         self.ent1.config(vcmd=(self.ent1.register(self.preview_color)))
         strvar.set(self.color)
         self.binder(self.ent1)
@@ -5337,7 +5201,8 @@ class BGColor(Widget):
                 fill=color,
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
         except tk.TclError:
             self.cv.create_rectangle(
                 EXPAND(280),
@@ -5347,7 +5212,8 @@ class BGColor(Widget):
                 fill="white",
                 outline="lightgray",
                 width=2,
-                tag="highlight")
+                tag="highlight",
+            )
 
     def show_option(self):
         color = self.ent1.get()
@@ -5373,7 +5239,8 @@ class BGColor(Widget):
                 f'\
 line: {self.tab.widgets.index(self)+1}, {self.__class__.__name__}\n\
 "{self.color}"を色として認識できませんでした',
-                parent=ROOT)
+                parent=ROOT,
+            )
             self.tab.kill_runner()
 
 
@@ -5757,8 +5624,7 @@ class Write(Widget):
         lab0.pack(side=tk.TOP, pady=EXPAND(10))
 
         # 決定ボタン
-        but1 = tk.Button(
-            frame0, text="決定", font=font, width=12, command=self.decide_option)
+        but1 = tk.Button(frame0, text="決定", font=font, width=12, command=self.decide_option)
         but1.pack(side=tk.BOTTOM, pady=(EXPAND(10), EXPAND(20)))
 
         # 下側のライン
@@ -5865,12 +5731,8 @@ class Write(Widget):
         self.font_list = self.without_atmark()
         var1 = tk.StringVar(value=self.font_list)
         self.lsb1 = tk.Listbox(
-            fra9,
-            listvariable=var1,
-            height=6,
-            width=24,
-            selectmode="single",
-            font=(FONT_TYPE2, EXPAND(18)))
+            fra9, listvariable=var1, height=6, width=24, selectmode="single", font=(FONT_TYPE2, EXPAND(18))
+        )
         self.lsb1.bind("<<ListboxSelect>>", self.change_font)
         self.lsb1.pack(fill=tk.Y, side=tk.LEFT)
         scr1 = ttk.Scrollbar(fra9, orient=tk.VERTICAL, command=self.lsb1.yview)
@@ -5896,8 +5758,7 @@ class Write(Widget):
         font = (mark + self.opt8.get(), size, self.opt6.get(), self.opt7.get())
 
         self.cv1.delete("preview")
-        self.cv1.create_text(
-            320, 80, text="abc ABC 123\nあいう 甲乙", font=font, tag="preview")
+        self.cv1.create_text(320, 80, text="abc ABC 123\nあいう 甲乙", font=font, tag="preview")
 
     def change_font(self, event: tk.Event):
         selected = self.lsb1.curselection()
@@ -5936,12 +5797,9 @@ class Write(Widget):
             mark + self.str2str(self.family),
             self.str2int(self.size),
             self.str2str(self.weight),
-            self.str2str(self.slant))
-        tur.write(
-            self.str2str(self.text),
-            move=self.str2bool(self.move),
-            align=self.str2str(self.align),
-            font=font)
+            self.str2str(self.slant),
+        )
+        tur.write(self.str2str(self.text), move=self.str2bool(self.move), align=self.str2str(self.align), font=font)
 
 
 class Bye(Widget):
@@ -6074,12 +5932,7 @@ class Comment(Widget):
 
     def draw(self):
         self.draw_cv()
-        self.ent1 = tk.Entry(
-            self.cv,
-            font=(FONT_TYPE1, EXPAND(14), "bold"),
-            fg="#B40404",
-            width=30,
-            justify=tk.LEFT)
+        self.ent1 = tk.Entry(self.cv, font=(FONT_TYPE1, EXPAND(14), "bold"), fg="#B40404", width=30, justify=tk.LEFT)
         text = self.comment.split("\n")[0]
         self.ent1.insert(tk.END, text)
         self.binder(self.ent1)
@@ -6093,12 +5946,10 @@ class Comment(Widget):
         lab1 = tk.Label(self.win, text="Option", font=(FONT_TYPE2, EXPAND(30), "bold"))
         lab1.pack(padx=EXPAND(20), pady=EXPAND(20))
         font_scr = (FONT_TYPE1, EXPAND(16), "bold")
-        self.scr1 = scrolledtext.ScrolledText(
-            self.win, font=font_scr, width=24, height=6)
+        self.scr1 = scrolledtext.ScrolledText(self.win, font=font_scr, width=24, height=6)
         self.scr1.pack(padx=EXPAND(20), pady=EXPAND(0))
         self.scr1.insert("0.0", self.comment)
-        but1 = tk.Button(
-            self.win, text="決定", font=FONT, width=10, command=self.decide_option)
+        but1 = tk.Button(self.win, text="決定", font=FONT, width=10, command=self.decide_option)
         but1.pack(padx=EXPAND(36), pady=EXPAND(20))
         self.win.resizable(False, False)
 
